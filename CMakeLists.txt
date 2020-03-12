@@ -23,7 +23,7 @@ include(PandoraCMakeSettings)
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 # External project versions
-set(git_repository_root "https://github.com/PandoraPFA")
+set(git_repository_root "https://github.com/MoteyMousam")
 
 set(PandoraSDK_repository "PandoraSDK.git")
 set(PandoraMonitoring_repository "PandoraMonitoring.git")
@@ -31,10 +31,10 @@ set(LCContent_repository "LCContent.git")
 set(LArContent_repository "LArContent.git")
 set(ExampleContent_repository "ExampleContent.git")
 
-set(PandoraSDK_version "v03-03-02")
-set(PandoraMonitoring_version "v03-04-01")
-set(LArContent_version "v03_15_00")
-set(LCContent_version "v03-01-03")
+set(PandoraSDK_version "v03-03-03")
+set(PandoraMonitoring_version "v03-04-02")
+set(LArContent_version "feature/Daresbury")
+set(LCContent_version "v03-01-04")
 set(ExampleContent_version "v03-00-02")
 set(Eigen3_version "3.3.3")
 
@@ -130,11 +130,17 @@ if(LAR_PANDORA_CONTENT)
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Eigen3-${Eigen3_version}
     )
 
+	if(TORCHLIB)
+    	message(STATUS "Setting TORCHLIB_ARGS")
+    	list(APPEND TORCHLIB_ARGS "-DTORCHLIB=ON")
+	endif()
+
     ExternalProject_Add(${LAR_CONTENT_LIBRARY_NAME}
         DEPENDS PandoraSDK ${MONITORING_DEPENDENCY} Eigen3
         GIT_REPOSITORY ${git_repository_root}/${LArContent_repository}
         GIT_TAG ${LArContent_version}
-        CMAKE_ARGS ${COMMON_CMAKE_ARGS} ${MONITORING_CMAKE_ARGS} -DLAR_CONTENT_LIBRARY_NAME=${LAR_CONTENT_LIBRARY_NAME} -DEigen3_DIR=${CMAKE_CURRENT_SOURCE_DIR}/Eigen3-${Eigen3_version}/share/eigen3/cmake/
+		UPDATE_COMMAND ""
+        CMAKE_ARGS ${COMMON_CMAKE_ARGS} ${MONITORING_CMAKE_ARGS} -DLAR_CONTENT_LIBRARY_NAME=${LAR_CONTENT_LIBRARY_NAME} -DEigen3_DIR=${CMAKE_CURRENT_SOURCE_DIR}/Eigen3-${Eigen3_version}/share/eigen3/cmake/ ${TORCHLIB_ARGS}
         PREFIX ${LAR_CONTENT_LIBRARY_NAME}-${LArContent_version}
         LIST_SEPARATOR %
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${LAR_CONTENT_LIBRARY_NAME}-${LArContent_version}
